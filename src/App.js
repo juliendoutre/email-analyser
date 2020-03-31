@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import { Container } from 'semantic-ui-react';
+import Header from './Components/Header';
 
 export default () => (
   <div className="App">
@@ -19,6 +20,7 @@ export default () => (
       </svg>
     </a>
     <Container style={{ paddingTop: '3em' }} textAlign='left'>
+      <Header />
     </Container>
   </div>
 );
