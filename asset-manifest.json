@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/juliendoutre/email-analyser/static/css/main.067787a0.chunk.css",
+    "main.js": "/juliendoutre/email-analyser/static/js/main.de37d701.chunk.js",
+    "main.js.map": "/juliendoutre/email-analyser/static/js/main.de37d701.chunk.js.map",
+    "runtime-main.js": "/juliendoutre/email-analyser/static/js/runtime-main.d29d0498.js",
+    "runtime-main.js.map": "/juliendoutre/email-analyser/static/js/runtime-main.d29d0498.js.map",
+    "static/css/2.c44d68f3.chunk.css": "/juliendoutre/email-analyser/static/css/2.c44d68f3.chunk.css",
+    "static/js/2.d0046f16.chunk.js": "/juliendoutre/email-analyser/static/js/2.d0046f16.chunk.js",
+    "static/js/2.d0046f16.chunk.js.map": "/juliendoutre/email-analyser/static/js/2.d0046f16.chunk.js.map",
+    "index.html": "/juliendoutre/email-analyser/index.html",
+    "precache-manifest.b6e1fac5c664a88a794b6488e0949e07.js": "/juliendoutre/email-analyser/precache-manifest.b6e1fac5c664a88a794b6488e0949e07.js",
+    "service-worker.js": "/juliendoutre/email-analyser/service-worker.js",
+    "static/css/2.c44d68f3.chunk.css.map": "/juliendoutre/email-analyser/static/css/2.c44d68f3.chunk.css.map",
+    "static/css/main.067787a0.chunk.css.map": "/juliendoutre/email-analyser/static/css/main.067787a0.chunk.css.map",
+    "static/js/2.d0046f16.chunk.js.LICENSE.txt": "/juliendoutre/email-analyser/static/js/2.d0046f16.chunk.js.LICENSE.txt",
+    "static/media/semantic.min.css": "/juliendoutre/email-analyser/static/media/outline-icons.ef60a4f6.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.d29d0498.js",
+    "static/css/2.c44d68f3.chunk.css",
+    "static/js/2.d0046f16.chunk.js",
+    "static/css/main.067787a0.chunk.css",
+    "static/js/main.de37d701.chunk.js"
+  ]
+}
