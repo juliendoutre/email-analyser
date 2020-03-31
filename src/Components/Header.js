@@ -2,7 +2,7 @@ import React from 'react';
 import { Header, Icon, Label } from 'semantic-ui-react'
 
 
-export default () =>
+export default () => (
     <Header as='h1' icon textAlign='center'>
         <Icon name='mail' circular />
         <Header.Content>
@@ -11,4 +11,5 @@ export default () =>
                 BETA
             </Label>
         </Header.Content>
-    </Header>;
+    </Header>
+);
