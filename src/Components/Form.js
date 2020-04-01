@@ -34,7 +34,7 @@ export default class extends Component {
             <div>
                 <Form style={{ textAlign: 'center', marginTop: '3em' }}>
                     <Form.TextArea placeholder='Email contents' name='email' value={this.state.email} onChange={this.handleChange} rows={15} />
-                    <Button onClick={this.handleSubmit} >Analyze</Button>
+                    <Button onClick={this.handleSubmit} >Analyse</Button>
                     <Button onClick={this.handleClear} color='orange'>Clear</Button>
                 </Form>
                 <Message warning hidden={this.state.messageHidden} onDismiss={this.handleDismiss}>

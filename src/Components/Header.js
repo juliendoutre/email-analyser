@@ -12,7 +12,7 @@ export default () => (
             </Label>
         </Header.Content>
         <Header.Subheader>
-            Parse an email headers to get more insights in its metadata.
+            Parse an email headers to get more insights into its metadata.
     </Header.Subheader>
     </Header>
 );
