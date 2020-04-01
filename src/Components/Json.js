@@ -2,6 +2,7 @@ import React from 'react';
 import { Segment, Button, Icon } from 'semantic-ui-react';
 import { saveAsJson } from './files';
 
+
 export default (props) => {
     let contents = JSON.stringify(props.results, null, 2);
     return <Segment basic>

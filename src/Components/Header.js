@@ -11,5 +11,8 @@ export default () => (
                 BETA
             </Label>
         </Header.Content>
+        <Header.Subheader>
+            Parse an email headers to get more insights in its metadata.
+    </Header.Subheader>
     </Header>
 );
