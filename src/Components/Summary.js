@@ -71,7 +71,7 @@ const copyToClipboard = (text) => {
 const emailListItem = (email, header) => (
     <List.Item>
         <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Check if this email address has been compromised on IHaveBeenPwned' trigger={<Button icon='zoom' circular onClick={() => document.location.href = 'https://haveibeenpwned.com/'} />} /></List.Content>
-        <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} mouseLeaveDelay={500} on='focus' content='Copy to clipboard' trigger={<Button icon='file' circular onClick={copyToClipboard(email)} />} /></List.Content>
+        <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='file' circular onClick={() => copyToClipboard(email)} />} /></List.Content>
         <List.Content>
             <List.Header>{email}</List.Header>
             <List.Description>{header}</List.Description>
