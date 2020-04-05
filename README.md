@@ -1,4 +1,4 @@
-# Email Analyser
+# Email Analyser 📧
 
 This is the source code of a website designed to help in the analysis of email headers.
 
