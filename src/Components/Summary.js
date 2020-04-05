@@ -126,21 +126,21 @@ const routingNodeItem = (node) => (
         <List relaxed selection>
             {'dns' in node ?
                 <List.Item>
-                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Perform a DNS lookup search' trigger={<Button icon='at' circular />} /></List.Content>
+                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Perform a DNS lookup search' trigger={<Button icon='at' circular disabled />} /></List.Content>
                     <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(node['dns'])} />} /></List.Content>
                     <List.Header>Domain Name</List.Header>
                     {node['dns']}
                 </List.Item> : null}
             {'ipv4' in node ?
                 <List.Item>
-                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Perform a DNS reverse lookup' trigger={<Button icon='cloud' circular />} /></List.Content>
+                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Perform a DNS reverse lookup' trigger={<Button icon='cloud' circular disabled />} /></List.Content>
                     <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(node['ipv4'])} />} /></List.Content>
                     <List.Header>IPv4</List.Header>
                     {node['ipv4']}
                 </List.Item> : null}
             {'ipv6' in node ?
                 <List.Item>
-                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Perform a DNS reverse lookup' trigger={<Button icon='cloud' circular />} /></List.Content>
+                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Perform a DNS reverse lookup' trigger={<Button icon='cloud' circular disabled />} /></List.Content>
                     <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(node['ipv6'])} />} /></List.Content>
                     <List.Header>IPv6</List.Header>
                     {node['ipv6']}
@@ -211,9 +211,9 @@ export default (props) => {
                     <Table.Body>
                         {data.routing.map(record => (
                             <Table.Row key={record}>
-                                {('timestamp' in record) ? <Table.Cell>{record['timestamp']}</Table.Cell> : null}
-                                {('source' in record) ? <Table.Cell>{routingNodeItem(record['source'])}</Table.Cell> : null}
-                                {('target' in record) ? <Table.Cell>{routingNodeItem(record['target'])}</Table.Cell> : null}
+                                {('timestamp' in record) ? <Table.Cell>{record['timestamp']}</Table.Cell> : <Table.Cell></Table.Cell>}
+                                {('source' in record) ? <Table.Cell>{routingNodeItem(record['source'])}</Table.Cell> : <Table.Cell></Table.Cell>}
+                                {('target' in record) ? <Table.Cell>{routingNodeItem(record['target'])}</Table.Cell> : <Table.Cell></Table.Cell>}
                             </Table.Row>
                         ))}
                     </Table.Body>

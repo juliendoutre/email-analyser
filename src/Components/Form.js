@@ -43,7 +43,7 @@ export default class extends Component {
                 </Message>
                 <Tab activeIndex={this.state.activeIndex} onTabChange={this.handleTabChange} panes={[
                     { menuItem: 'Summary', render: () => <Tab.Pane><Summary results={this.state.results} /></Tab.Pane> },
-                    { menuItem: 'Graph', render: () => <Tab.Pane><Graph results={this.state.results} /></Tab.Pane> },
+                    { menuItem: 'Routing Graph', render: () => <Tab.Pane><Graph results={this.state.results} /></Tab.Pane> },
                     { menuItem: 'Table', render: () => <Tab.Pane><Table results={this.state.results} /></Tab.Pane> },
                     { menuItem: 'JSON', render: () => <Tab.Pane><JSON results={this.state.results} /></Tab.Pane> },
                 ]} hidden={Object.keys(this.state.results).length === 0} style={{ marginTop: '3em' }} defaultActiveIndex={0} />
