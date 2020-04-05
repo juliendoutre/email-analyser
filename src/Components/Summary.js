@@ -56,14 +56,27 @@ const prepareData = (results) => {
     return data;
 };
 
+const copyToClipboard = (text) => {
+    let tag = document.createElement("textarea");
+    tag.innerText = text;
+    document.body.appendChild(tag);
+
+    tag.select();
+    tag.setSelectionRange(0, 99999);
+
+    document.execCommand("copy");
+    tag.remove();
+};
+
 const emailListItem = (email, header) => (
     <List.Item>
         <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Check if this email address has been compromised on IHaveBeenPwned' trigger={<Button icon='zoom' circular onClick={() => document.location.href = 'https://haveibeenpwned.com/'} />} /></List.Content>
+        <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} mouseLeaveDelay={500} on='focus' content='Copy to clipboard' trigger={<Button icon='file' circular onClick={copyToClipboard(email)} />} /></List.Content>
         <List.Content>
             <List.Header>{email}</List.Header>
             <List.Description>{header}</List.Description>
         </List.Content>
-    </List.Item>
+    </List.Item >
 );
 
 export default (props) => {
@@ -79,13 +92,13 @@ export default (props) => {
                 <Icon name='users' />
                 <Header.Content>Stakeholders</Header.Content>
             </Header>
-            <Header as='h4'>Sender</Header>
+            <Header as='h4' disabled={data.users.From.length === 0 && data.users["Return-Path"].length === 0}>Sender</Header>
             <List relaxed selection>
                 {data.users.From.map(user => emailListItem(user, 'From'))}
                 {data.users['Return-Path'].map(user => emailListItem(user, 'Return-Path'))}
             </List>
             <Divider />
-            <Header as='h4'>Recipient(s)</Header>
+            <Header as='h4' disabled={data.users.To.length === 0 && data.users.Cc.length === 0}>Recipient(s)</Header>
             <List relaxed selection>
                 {data.users.To.map(user => emailListItem(user, 'To'))}
                 {data.users.Cc.map(user => emailListItem(user, 'Cc'))}
