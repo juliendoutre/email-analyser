@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Tab, Message, Button } from 'semantic-ui-react';
 import Table from './Table';
-import parse from './parser';
+import { parseHeaders } from './parsing';
 import JSON from './Json';
 import Graph from './Graph';
 import Summary from './Summary';
@@ -14,7 +14,7 @@ export default class extends Component {
 
     handleSubmit = () => {
         this.setState({ results: {}, messageHidden: true, activeIndex: 0 });
-        const results = parse(this.state.email);
+        const results = parseHeaders(this.state.email);
         this.setState({ results: results });
         this.setState({ messageHidden: Object.keys(results).length !== 0 });
     }

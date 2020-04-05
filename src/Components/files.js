@@ -18,3 +18,15 @@ export const saveAsCSV = (data, name) => () => {
     a.download = name;
     a.click();
 };
+
+export const copyToClipboard = (text) => {
+    let tag = document.createElement("textarea");
+    tag.innerText = text;
+    document.body.appendChild(tag);
+
+    tag.select();
+    tag.setSelectionRange(0, 99999);
+
+    document.execCommand("copy");
+    tag.remove();
+};
