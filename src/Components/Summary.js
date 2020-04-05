@@ -42,21 +42,18 @@ const routingNodeItem = (node) => (
         <List relaxed selection>
             {'dns' in node ?
                 <List.Item>
-                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Perform a DNS lookup search' trigger={<Button icon='at' circular disabled />} /></List.Content>
                     <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(node['dns'])} />} /></List.Content>
                     <List.Header>Domain Name</List.Header>
                     {node['dns']}
                 </List.Item> : null}
             {'ipv4' in node ?
                 <List.Item>
-                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Perform a DNS reverse lookup' trigger={<Button icon='cloud' circular disabled />} /></List.Content>
                     <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(node['ipv4'])} />} /></List.Content>
                     <List.Header>IPv4</List.Header>
                     {node['ipv4']}
                 </List.Item> : null}
             {'ipv6' in node ?
                 <List.Item>
-                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Perform a DNS reverse lookup' trigger={<Button icon='cloud' circular disabled />} /></List.Content>
                     <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(node['ipv6'])} />} /></List.Content>
                     <List.Header>IPv6</List.Header>
                     {node['ipv6']}
