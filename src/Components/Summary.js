@@ -27,9 +27,8 @@ const prepareData = (results) => {
 };
 
 const emailListItem = (email, header) => (
-    <List.Item>
-        <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Check if this email address has been compromised on IHaveBeenPwned' trigger={<Button icon='zoom' circular onClick={() => document.location.href = 'https://haveibeenpwned.com/'} />} /></List.Content>
-        <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(email)} />} /></List.Content>
+    <List.Item onClick={() => copyToClipboard(email)} >
+        <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Check if this email address has been compromised on HaveIBeenPwned' trigger={<Button icon='zoom' circular onClick={() => document.location.href = 'https://haveibeenpwned.com/'} />} /></List.Content>
         <List.Content>
             <List.Header>{email}</List.Header>
             <List.Description>{header}</List.Description>
@@ -41,20 +40,17 @@ const routingNodeItem = (node) => (
     node !== undefined ?
         <List relaxed selection>
             {'dns' in node ?
-                <List.Item>
-                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(node['dns'])} />} /></List.Content>
+                <List.Item onClick={() => copyToClipboard(node['dns'])}>
                     <List.Header>Domain Name</List.Header>
                     {node['dns']}
                 </List.Item> : null}
             {'ipv4' in node ?
-                <List.Item>
-                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(node['ipv4'])} />} /></List.Content>
+                <List.Item onClick={() => copyToClipboard(node['ipv4'])}>
                     <List.Header>IPv4</List.Header>
                     {node['ipv4']}
                 </List.Item> : null}
             {'ipv6' in node ?
-                <List.Item>
-                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(node['ipv6'])} />} /></List.Content>
+                <List.Item onClick={() => copyToClipboard(node['ipv6'])}>
                     <List.Header>IPv6</List.Header>
                     {node['ipv6']}
                 </List.Item> : null}
