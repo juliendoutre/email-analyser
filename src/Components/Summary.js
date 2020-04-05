@@ -2,12 +2,14 @@ import React from 'react';
 import { Header, Icon, Button, Segment, List, Table, Divider, Popup } from 'semantic-ui-react';
 import { saveAsJson } from './files';
 
-const insertIfExists = (key, source, target) => {
+const getStringIfExists = (key, source) => {
     for (let k of Object.keys(source)) {
-        if (k.toLowerCase() === key) {
-            target[key] = source[k];
+        if (k.toLowerCase() === key.toLowerCase()) {
+            return source[k];
         }
     }
+
+    return "";
 }
 
 const getEmailListFromField = (key, source) => {
@@ -18,8 +20,61 @@ const getEmailListFromField = (key, source) => {
             return result !== null ? result : [];
         }
     }
+
     return [];
 }
+
+const parseNode = (str) => {
+    let node = {};
+
+    let ipv4 = str.match(/[\s(,;[](?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)[\s),;\]]/);
+    if (ipv4 !== null && ipv4.length > 0) {
+        node['ipv4'] = ipv4[0].replace(/^[\s(,;[]/, '').replace(/[\s),;\]]$/, '');
+    }
+
+    let ipv6 = str.match(/([0-9a-f]|:){1,4}(:([0-9a-f]{0,4})*){1,7}/i);
+    if (ipv6 !== null && ipv6.length > 0) {
+        node['ipv6'] = ipv6[0];
+    }
+
+    let dns = str.match(/((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}/);
+    if (dns !== null && dns.length > 0) {
+        node['dns'] = dns[0];
+    }
+
+    return node;
+};
+
+const parseRoutingNodes = (lines) => {
+    let nodes = [];
+
+    for (let line of lines) {
+        let node = {};
+
+        line = line.replace('\n', ' ').replace('\t', ' ');
+
+        let dateStartIndex = line.indexOf(';');
+        if (dateStartIndex !== -1) {
+            node['timestamp'] = line.substring(dateStartIndex + 1, line.length);
+            line = line.substring(0, dateStartIndex);
+        }
+
+        let byStartIndex = line.indexOf('by ');
+        if (byStartIndex !== -1) {
+            node['target'] = parseNode(line.substring(byStartIndex + 3, line.length));
+            line = line.substring(0, byStartIndex);
+        }
+
+        let fromStartIndex = line.indexOf('from ');
+        if (fromStartIndex !== -1) {
+            node['source'] = parseNode(line.substring(fromStartIndex + 5, line.length));
+        }
+
+        nodes.push(node);
+    }
+
+    return nodes;
+};
 
 const prepareData = (results) => {
     let data = {
@@ -29,29 +84,16 @@ const prepareData = (results) => {
             Cc: getEmailListFromField('Cc', results),
             'Return-Path': getEmailListFromField('Return-Path', results),
         },
-        contents: {},
-        routing: [],
+        contents: {
+            'Message-Id': getStringIfExists('Message-Id', results),
+            'Date': getStringIfExists('Date', results),
+            'Subject': getStringIfExists('Subject', results),
+            'MIME-Version': getStringIfExists('MIME-Version', results),
+            'Content-Type': getStringIfExists('Content-Type', results),
+            'Content-Language': getStringIfExists('Content-Language', results),
+        },
+        routing: parseRoutingNodes('Received' in results ? results['Received'] : []),
     };
-
-    ['message-id', 'subject', 'thread-topic', 'mime-version', 'content-type', 'content-language',].forEach(key => insertIfExists(key, results, data.contents));
-
-    if ('Received' in results) {
-        for (let line of results['Received']) {
-            let row = {};
-
-            let by = line.match(/by [-.:\w]*/);
-            if (by !== null && by.length > 0) {
-                row['target'] = by[0].replace('by ', '').toLowerCase();
-            }
-
-            let from = line.match(/^from [-.:\w]*/);
-            if (from != null && from.length > 0) {
-                row['source'] = from[0].replace('from ', '').toLowerCase();
-            }
-
-            data.routing.push(row);
-        }
-    }
 
     return data;
 };
@@ -71,12 +113,39 @@ const copyToClipboard = (text) => {
 const emailListItem = (email, header) => (
     <List.Item>
         <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Check if this email address has been compromised on IHaveBeenPwned' trigger={<Button icon='zoom' circular onClick={() => document.location.href = 'https://haveibeenpwned.com/'} />} /></List.Content>
-        <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='file' circular onClick={() => copyToClipboard(email)} />} /></List.Content>
+        <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(email)} />} /></List.Content>
         <List.Content>
             <List.Header>{email}</List.Header>
             <List.Description>{header}</List.Description>
         </List.Content>
-    </List.Item >
+    </List.Item>
+);
+
+const routingNodeItem = (node) => (
+    node !== undefined ?
+        <List relaxed selection>
+            {'dns' in node ?
+                <List.Item>
+                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Perform a DNS lookup search' trigger={<Button icon='at' circular />} /></List.Content>
+                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(node['dns'])} />} /></List.Content>
+                    <List.Header>Domain Name</List.Header>
+                    {node['dns']}
+                </List.Item> : null}
+            {'ipv4' in node ?
+                <List.Item>
+                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Perform a DNS reverse lookup' trigger={<Button icon='cloud' circular />} /></List.Content>
+                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(node['ipv4'])} />} /></List.Content>
+                    <List.Header>IPv4</List.Header>
+                    {node['ipv4']}
+                </List.Item> : null}
+            {'ipv6' in node ?
+                <List.Item>
+                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Perform a DNS reverse lookup' trigger={<Button icon='cloud' circular />} /></List.Content>
+                    <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular onClick={() => copyToClipboard(node['ipv6'])} />} /></List.Content>
+                    <List.Header>IPv6</List.Header>
+                    {node['ipv6']}
+                </List.Item> : null}
+        </List> : null
 );
 
 export default (props) => {
@@ -88,7 +157,8 @@ export default (props) => {
                 Download JSON
                 <Icon name='download' />
             </Button>
-            <Header as='h3'>
+
+            <Header as='h2'>
                 <Icon name='users' />
                 <Header.Content>Stakeholders</Header.Content>
             </Header>
@@ -103,33 +173,51 @@ export default (props) => {
                 {data.users.To.map(user => emailListItem(user, 'To'))}
                 {data.users.Cc.map(user => emailListItem(user, 'Cc'))}
             </List>
+
             <Divider />
 
-
-
-            <Header as='h3' disabled={Object.keys(data.contents).length === 0}>
+            <Header as='h2' disabled={Object.keys(data.contents).length === 0}>
                 <Icon name='file alternate' />
                 <Header.Content>Contents</Header.Content>
             </Header>
-            <List bulleted relaxed items={Object.keys(data.contents).map(k => k + ': ' + data.contents[k])}></List>
-            <Header as='h3' disabled={Object.keys(data.contents).length === 0}>
+            <Table basic='very' selectable>
+                <Table.Body>
+                    {
+                        Object.keys(data.contents).map(k => <Table.Row disabled={data.contents[k] === ""}>
+                            <Table.Cell width={3}><b>{k}</b></Table.Cell>
+                            <Table.Cell width={11}>{data.contents[k]}</Table.Cell>
+                            <Table.Cell width={2} textAlign='center'>
+                                <Popup inverted style={{ opacity: 0.8 }} content='Copy to clipboard' trigger={<Button icon='copy' circular disabled={data.contents[k] === ""} onClick={() => copyToClipboard(data.contents[k])} />} />
+                            </Table.Cell>
+                        </Table.Row>)
+                    }
+                </Table.Body>
+            </Table>
+
+            <Divider />
+
+            <Header as='h2' disabled={Object.keys(data.contents).length === 0}>
                 <Icon name='globe' />
                 <Header.Content>Routing</Header.Content>
             </Header>
-            {data.routing.length > 0 ? <Table>
-                <Table.Header>
-                    <Table.HeaderCell>Source</Table.HeaderCell>
-                    <Table.HeaderCell>Target</Table.HeaderCell>
-                </Table.Header>
-                <Table.Body>
-                    {data.routing.map(key => (
-                        <Table.Row key={key}>
-                            <Table.Cell>{key.source}</Table.Cell>
-                            <Table.Cell>{key.target}</Table.Cell>
-                        </Table.Row>
-                    ))}
-                </Table.Body>
-            </Table> : null}
+
+            {data.routing.length > 0 ?
+                <Table columns={3}>
+                    <Table.Header>
+                        <Table.HeaderCell>Timestamp</Table.HeaderCell>
+                        <Table.HeaderCell>Source</Table.HeaderCell>
+                        <Table.HeaderCell>Target</Table.HeaderCell>
+                    </Table.Header>
+                    <Table.Body>
+                        {data.routing.map(record => (
+                            <Table.Row key={record}>
+                                {('timestamp' in record) ? <Table.Cell>{record['timestamp']}</Table.Cell> : null}
+                                {('source' in record) ? <Table.Cell>{routingNodeItem(record['source'])}</Table.Cell> : null}
+                                {('target' in record) ? <Table.Cell>{routingNodeItem(record['target'])}</Table.Cell> : null}
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                </Table> : null}
         </Segment>
     );
 };
