@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Icon, Button, Segment, List, Table } from 'semantic-ui-react';
+import { Header, Icon, Button, Segment, List, Table, Divider, Popup } from 'semantic-ui-react';
 import { saveAsJson } from './files';
 
 const insertIfExists = (key, source, target) => {
@@ -10,14 +10,29 @@ const insertIfExists = (key, source, target) => {
     }
 }
 
+const getEmailListFromField = (key, source) => {
+    let emailRegexp = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi;
+    for (let k of Object.keys(source)) {
+        if (k.toLowerCase() === key.toLowerCase()) {
+            let result = source[k].match(emailRegexp);
+            return result !== null ? result : [];
+        }
+    }
+    return [];
+}
+
 const prepareData = (results) => {
     let data = {
-        users: {},
+        users: {
+            From: getEmailListFromField('From', results),
+            To: getEmailListFromField('To', results),
+            Cc: getEmailListFromField('Cc', results),
+            'Return-Path': getEmailListFromField('Return-Path', results),
+        },
         contents: {},
         routing: [],
     };
 
-    ['from', 'to', 'cc'].forEach(key => insertIfExists(key, results, data.users));
     ['message-id', 'subject', 'thread-topic', 'mime-version', 'content-type', 'content-language',].forEach(key => insertIfExists(key, results, data.contents));
 
     if ('Received' in results) {
@@ -41,6 +56,16 @@ const prepareData = (results) => {
     return data;
 };
 
+const emailListItem = (email, header) => (
+    <List.Item>
+        <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Check if this email address has been compromised on IHaveBeenPwned' trigger={<Button icon='zoom' circular onClick={() => document.location.href = 'https://haveibeenpwned.com/'} />} /></List.Content>
+        <List.Content>
+            <List.Header>{email}</List.Header>
+            <List.Description>{header}</List.Description>
+        </List.Content>
+    </List.Item>
+);
+
 export default (props) => {
     let data = prepareData(props.results);
 
@@ -50,11 +75,25 @@ export default (props) => {
                 Download JSON
                 <Icon name='download' />
             </Button>
-            <Header as='h3' disabled={Object.keys(data.users).length === 0}>
+            <Header as='h3'>
                 <Icon name='users' />
                 <Header.Content>Stakeholders</Header.Content>
             </Header>
-            <List bulleted relaxed items={Object.keys(data.users).map(k => k + ': ' + data.users[k])}></List>
+            <Header as='h4'>Sender</Header>
+            <List relaxed selection>
+                {data.users.From.map(user => emailListItem(user, 'From'))}
+                {data.users['Return-Path'].map(user => emailListItem(user, 'Return-Path'))}
+            </List>
+            <Divider />
+            <Header as='h4'>Recipient(s)</Header>
+            <List relaxed selection>
+                {data.users.To.map(user => emailListItem(user, 'To'))}
+                {data.users.Cc.map(user => emailListItem(user, 'Cc'))}
+            </List>
+            <Divider />
+
+
+
             <Header as='h3' disabled={Object.keys(data.contents).length === 0}>
                 <Icon name='file alternate' />
                 <Header.Content>Contents</Header.Content>
