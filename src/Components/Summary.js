@@ -37,7 +37,7 @@ const parseNode = (str) => {
         node['ipv6'] = ipv6[0];
     }
 
-    let dns = str.match(/((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}/);
+    let dns = str.match(/((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}/gi);
     if (dns !== null && dns.length > 0) {
         node['dns'] = dns[0];
     }
