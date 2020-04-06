@@ -33,6 +33,9 @@ export const parseHeaders = (text) => {
       }
     }
   });
+
+  insertIn(lastParsedHeader, headers);
+  return headers;
 };
 
 export const getStringIfExists = (key, source) => {
