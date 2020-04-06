@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Header, Icon, Button, Segment, List, Table, Divider, Popup } from 'semantic-ui-react';
 import { saveAsJson, copyToClipboard } from './files';
 import { getStringIfExists, getEmailListFromField, parseRoutingNodes } from './parsing';
@@ -26,34 +26,83 @@ const prepareData = (results) => {
     return data;
 };
 
-const emailListItem = (email, header) => (
-    <List.Item onClick={() => copyToClipboard(email)} >
-        <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Check if this email address has been compromised on HaveIBeenPwned' trigger={<Button icon='zoom' circular onClick={() => document.location.href = 'https://haveibeenpwned.com/'} />} /></List.Content>
-        <List.Content>
-            <List.Header>{email}</List.Header>
-            <List.Description>{header}</List.Description>
-        </List.Content>
-    </List.Item>
-);
+class EmailListItem extends Component {
+    state = { popupVisible: false };
+
+    handleOpen = () => {
+        this.setState({ popupVisible: true });
+        this.timeout = setTimeout(() => this.handleClose(), 1000);
+    };
+
+    handleClose = () => {
+        this.setState({ popupVisible: false });
+        clearTimeout(this.timeout);
+    };
+
+    render() {
+        return (
+            <Popup
+                inverted
+                content='Copied to clipboard!'
+                on='click'
+                open={this.state.popupVisible}
+                onClose={this.handleClose}
+                onOpen={this.handleOpen}
+                trigger={
+                    <List.Item onClick={() => copyToClipboard(this.props.email)} >
+                        <List.Content floated='right'><Popup inverted style={{ opacity: 0.8 }} content='Check if this email address has been compromised on HaveIBeenPwned' trigger={<Button icon='zoom' circular onClick={() => document.location.href = 'https://haveibeenpwned.com/'} />} /></List.Content>
+                        <List.Content>
+                            <List.Header>{this.props.email}</List.Header>
+                            <List.Description>{this.props.header}</List.Description>
+                        </List.Content>
+                    </List.Item >
+                }
+            />
+        );
+    }
+};
+
+class RoutingNodeItemAttribute extends Component {
+    state = { popupVisible: false };
+
+    handleOpen = () => {
+        this.setState({ popupVisible: true });
+        this.timeout = setTimeout(() => this.handleClose(), 1000);
+    };
+
+    handleClose = () => {
+        this.setState({ popupVisible: false });
+        clearTimeout(this.timeout);
+    };
+
+    render() {
+        return (
+            <Popup
+                inverted
+                content='Copied to clipboard!'
+                on='click'
+                open={this.state.popupVisible}
+                onClose={this.handleClose}
+                onOpen={this.handleOpen}
+                trigger={
+                    <List.Item onClick={() => copyToClipboard(this.props.description)} >
+                        <List.Content>
+                            <List.Header>{this.props.header}</List.Header>
+                            <List.Description>{this.props.description}</List.Description>
+                        </List.Content>
+                    </List.Item>
+                }
+            />
+        );
+    }
+};
 
 const routingNodeItem = (node) => (
     node !== undefined ?
         <List relaxed selection>
-            {'dns' in node ?
-                <List.Item onClick={() => copyToClipboard(node['dns'])}>
-                    <List.Header>Domain Name</List.Header>
-                    {node['dns']}
-                </List.Item> : null}
-            {'ipv4' in node ?
-                <List.Item onClick={() => copyToClipboard(node['ipv4'])}>
-                    <List.Header>IPv4</List.Header>
-                    {node['ipv4']}
-                </List.Item> : null}
-            {'ipv6' in node ?
-                <List.Item onClick={() => copyToClipboard(node['ipv6'])}>
-                    <List.Header>IPv6</List.Header>
-                    {node['ipv6']}
-                </List.Item> : null}
+            {'dns' in node ? <RoutingNodeItemAttribute header='Domain name' description={node['dns']} /> : null}
+            {'ipv4' in node ? <RoutingNodeItemAttribute header='IPv4' description={node['ipv4']} /> : null}
+            {'ipv6' in node ? <RoutingNodeItemAttribute header='IPv6' description={node['ipv6']} /> : null}
         </List> : null
 );
 
@@ -73,14 +122,14 @@ export default (props) => {
             </Header>
             <Header as='h4' disabled={data.users.From.length === 0 && data.users["Return-Path"].length === 0}>Sender</Header>
             <List relaxed selection>
-                {data.users.From.map(user => emailListItem(user, 'From'))}
-                {data.users['Return-Path'].map(user => emailListItem(user, 'Return-Path'))}
+                {data.users.From.map(user => <EmailListItem email={user} header='From' />)}
+                {data.users['Return-Path'].map(user => <EmailListItem email={user} header='Return-Path' />)}
             </List>
             <Divider />
             <Header as='h4' disabled={data.users.To.length === 0 && data.users.Cc.length === 0}>Recipient(s)</Header>
             <List relaxed selection>
-                {data.users.To.map(user => emailListItem(user, 'To'))}
-                {data.users.Cc.map(user => emailListItem(user, 'Cc'))}
+                {data.users.To.map(user => <EmailListItem email={user} header='To' />)}
+                {data.users.Cc.map(user => <EmailListItem email={user} header='Cc' />)}
             </List>
 
             <Divider />
@@ -111,7 +160,7 @@ export default (props) => {
             </Header>
 
             {data.routing.length > 0 ?
-                <Table columns={3}>
+                <Table>
                     <Table.Header>
                         <Table.HeaderCell>Timestamp</Table.HeaderCell>
                         <Table.HeaderCell>Source</Table.HeaderCell>
