@@ -10,7 +10,7 @@ export default () => (
   <div className="App">
     <Ribbon />
     <Info />
-    <Container style={{ paddingTop: '3em', paddingBottom: '3em' }} textAlign='left'>
+    <Container style={{ paddingTop: '3em', paddingBottom: '3em' }} textAlign="left">
       <Header />
       <Form />
     </Container>
