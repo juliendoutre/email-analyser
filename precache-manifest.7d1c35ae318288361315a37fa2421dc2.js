@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8bbe28c0ea70c951e8f9b99c6a46694c",
+    "revision": "868cb616a578202176aa9c475943efb8",
     "url": "/email-analyser/index.html"
   },
   {
-    "revision": "a572cdf71c6b512a6e12",
+    "revision": "b035aad70ca55104d6c9",
     "url": "/email-analyser/static/css/2.3b611ab4.chunk.css"
   },
   {
-    "revision": "7850478ec70a7d8bb560",
+    "revision": "c1067f66c71cfc17788d",
     "url": "/email-analyser/static/css/main.fd20eb7c.chunk.css"
   },
   {
-    "revision": "a572cdf71c6b512a6e12",
-    "url": "/email-analyser/static/js/2.fcdbc737.chunk.js"
+    "revision": "b035aad70ca55104d6c9",
+    "url": "/email-analyser/static/js/2.616ec5e4.chunk.js"
   },
   {
     "revision": "2089965cc3e0fbb1dda2d650d8277df4",
-    "url": "/email-analyser/static/js/2.fcdbc737.chunk.js.LICENSE.txt"
+    "url": "/email-analyser/static/js/2.616ec5e4.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "7850478ec70a7d8bb560",
-    "url": "/email-analyser/static/js/main.703f9434.chunk.js"
+    "revision": "c1067f66c71cfc17788d",
+    "url": "/email-analyser/static/js/main.0d69cd59.chunk.js"
   },
   {
     "revision": "766274dc997331fda8b2",
