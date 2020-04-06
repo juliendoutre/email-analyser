@@ -21,6 +21,10 @@
     "plugins": [
         "react"
     ],
-    "rules": {
-    }
+    "ignorePatterns": [
+        "build/",
+        "node_modules/",
+        "serviceWorker.js"
+    ],
+    "rules": {}
 }

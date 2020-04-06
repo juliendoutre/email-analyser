@@ -14,29 +14,25 @@ const insertIn = (header, headers) => {
 
 export const parseHeaders = (text) => {
   const headers = {};
-  const last_parsed_header = { name: null, contents: null };
+  const lastParsedHeader = { name: null, contents: null };
 
-  for (const line of text.split('\n')) {
+  text.split('\n').forEach((line) => {
     if (line !== '') {
       const matches = line.match(/^[-\w]*:/);
 
       if (matches != null && matches.length > 0) {
-        insertIn(last_parsed_header, headers);
+        insertIn(lastParsedHeader, headers);
 
-        last_parsed_header.name = matches[0].replace(':', '');
-        last_parsed_header.contents = line.replace(matches[0], '').trim();
+        lastParsedHeader.name = matches[0].replace(':', '');
+        lastParsedHeader.contents = line.replace(matches[0], '').trim();
       } else {
-        if (last_parsed_header.contents !== '') {
-          last_parsed_header.contents += '\n';
+        if (lastParsedHeader.contents !== '') {
+          lastParsedHeader.contents += '\n';
         }
-        last_parsed_header.contents += line.trim();
+        lastParsedHeader.contents += line.trim();
       }
     }
-  }
-
-  insertIn(last_parsed_header, headers);
-
-  return headers;
+  });
 };
 
 export const getStringIfExists = (key, source) => {
@@ -62,19 +58,20 @@ export const getEmailListFromField = (key, source) => {
 };
 
 export const parseNode = (str) => {
+  const ipv4 = str.match(/[\s(,;[](?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)[\s),;\]]/);
+  const ipv6 = str.match(/([0-9a-f]|:){1,4}(:([0-9a-f]{0,4})*){1,7}/i);
+  const dns = str.match(/((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}/gi);
+
   const node = {};
 
-  const ipv4 = str.match(/[\s(,;[](?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)[\s),;\]]/);
   if (ipv4 !== null && ipv4.length > 0) {
     node.ipv4 = ipv4[0].replace(/^[\s(,;[]/, '').replace(/[\s),;\]]$/, '');
   }
 
-  const ipv6 = str.match(/([0-9a-f]|:){1,4}(:([0-9a-f]{0,4})*){1,7}/i);
   if (ipv6 !== null && ipv6.length > 0) {
     node.ipv6 = ipv6[0];
   }
 
-  const dns = str.match(/((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}/gi);
   if (dns !== null && dns.length > 0) {
     node.dns = dns[0];
   }
