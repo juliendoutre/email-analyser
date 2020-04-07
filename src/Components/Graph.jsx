@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
-import { Segment, Header } from 'semantic-ui-react';
+import { Segment, Header, Grid, Icon } from 'semantic-ui-react';
 import { parseRoutingRecords } from './parsing';
+import routingNodeItem from './RoutingNodeItem';
 
 const nodesMatch = (node1, node2) => {
   return ('dns' in node1 && 'dns' in node2 && node1['dns'].toLowerCase() === node2['dns'].toLowerCase())
@@ -135,7 +136,7 @@ const prepareGraphData = (header) => {
 export default class extends Component {
   constructor(props) {
     super(props);
-    this.state = { enabled: 'Received' in this.props.results };
+    this.state = { enabled: 'Received' in this.props.results, selectedNode: {} };
   }
 
   componentDidMount() {
@@ -144,12 +145,12 @@ export default class extends Component {
 
       const types = ["standard"]
 
-      const width = document.getElementsByClassName("ui basic segment")[0].offsetWidth;
+      const width = document.getElementsByClassName("eleven wide column")[0].offsetWidth;
       const height = 0.5 * width;
 
       const simulation = d3.forceSimulation(data.nodes)
         .force("link", d3.forceLink(data.links).id(d => d.id))
-        .force("charge", d3.forceManyBody().strength(-700))
+        .force("charge", d3.forceManyBody().strength(-400))
         .force("x", d3.forceX())
         .force("y", d3.forceY());
 
@@ -209,6 +210,7 @@ export default class extends Component {
       };
 
       const node = svg.append("g")
+        .attr("id", "nodes-container")
         .attr("fill", "#1f77b4")
         .attr("stroke-linecap", "round")
         .attr("stroke-linejoin", "round")
@@ -250,15 +252,19 @@ export default class extends Component {
         }
       });
 
-      node.on("click", function () {
+      const updateState = (node) => this.setState({ selectedNode: node });
+      updateState.bind(this);
+
+      node.on("click", function (d) {
         const el = d3.select(this);
-        node.selectAll("g").join("g").attr("isClicked", "false");
         if (el.attr("isClicked") === "false") {
+          updateState(d);
           el.attr("isClicked", "true");
         } else {
           el.attr("isClicked", "false");
+          updateState({});
         }
-      })
+      });
 
       const link = svg.append("g")
         .attr("fill", "none")
@@ -280,7 +286,20 @@ export default class extends Component {
 
   render() {
     if (this.state.enabled) {
-      return <Segment basic><svg id="canvas" /></Segment>;
+      return <Segment basic>
+        <Grid>
+          <Grid.Column width={5}>
+            <Header as='h3'>
+              <Icon name='server' />
+              <Header.Content>Selected server</Header.Content>
+              {routingNodeItem(this.state.selectedNode)}
+            </Header>
+          </Grid.Column>
+          <Grid.Column width={11}>
+            <svg id="canvas" />
+          </Grid.Column>
+        </Grid>
+      </Segment>;
     }
 
     return <Segment basic disabled><Header as="h4">Nothing to display.</Header></Segment>;
