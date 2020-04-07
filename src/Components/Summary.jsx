@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Header, Icon, Button, Segment, List, Table, Divider, Popup } from 'semantic-ui-react';
 import { saveAsJson, copyToClipboard } from './files';
-import { getStringIfExists, getEmailListFromField, parseRoutingNodes } from './parsing';
+import { getStringIfExists, getEmailListFromField, parseRoutingRecords } from './parsing';
 
 
 const prepareData = (results) => {
@@ -20,7 +20,7 @@ const prepareData = (results) => {
             'Content-Type': getStringIfExists('Content-Type', results),
             'Content-Language': getStringIfExists('Content-Language', results),
         },
-        routing: parseRoutingNodes('Received' in results ? results['Received'] : []),
+        routing: parseRoutingRecords('Received' in results ? results['Received'] : []),
     };
 
     return data;

@@ -1,29 +1,130 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import { Segment, Header } from 'semantic-ui-react';
+import { parseRoutingRecords } from './parsing';
 
-const getGraphData = (lines) => {
+const nodesMatch = (node1, node2) => {
+  return ('dns' in node1 && 'dns' in node2 && node1['dns'].toLowerCase() === node2['dns'].toLowerCase())
+    || ('ipv4' in node1 && 'ipv4' in node2 && node1['ipv4'] === node2['ipv4'])
+    || ('ipv6' in node1 && 'ipv6' in node2 && node1['ipv6'] === node2['ipv6'])
+};
+
+const updateNodeId = node => {
+  if ('dns' in node) {
+    node['id'] = node['dns'];
+  } else if ('ipv4' in node) {
+    node['id'] = node['ipv4'];
+  } else if ('ipv6' in node) {
+    node['id'] = node['ipv6']
+  } else {
+    node['id'] = parseInt(Math.random() * 1000, 10).toString();
+  }
+};
+
+const completeNodeData = (node1, node2) => {
+  if ('dns' in node1 && !('dns' in node2)) {
+    node2['dns'] = node1['dns'];
+  }
+
+  if ('ipv4' in node1 && !('ipv4' in node2)) {
+    node2['ipv4'] = node1['ipv4'];
+  }
+
+  if ('ipv6' in node1 && !('ipv6' in node2)) {
+    node2['ipv6'] = node1['ipv6'];
+  }
+
+  updateNodeId(node2);
+};
+
+const addOrCompleteNode = (nodes, recordNode) => {
+  let didBreak = false;
+  for (let node of nodes) {
+    if (nodesMatch(recordNode, node)) {
+      completeNodeData(recordNode, node);
+      didBreak = true;
+      break;
+    }
+  }
+
+  if (!didBreak) {
+    let node = {};
+
+    if ('dns' in recordNode) {
+      node['dns'] = recordNode['dns'];
+    }
+
+    if ('ipv4' in recordNode) {
+      node['ipv4'] = recordNode['ipv4'];
+    }
+
+    if ('ipv6' in recordNode) {
+      node['ipv6'] = recordNode['ipv6'];
+    }
+
+    updateNodeId(node);
+
+    nodes.push(node);
+  }
+};
+
+
+const getNodeIdForField = (nodes, field, value) => {
+  for (let node of nodes) {
+    if (node[field] === value) {
+      return node['id'];
+    }
+  }
+
+  return "-1";
+};
+
+const getNodeId = (nodes, partialNode) => {
+  let id;
+
+  if ('dns' in partialNode) {
+    id = getNodeIdForField(nodes, 'dns', partialNode['dns']);
+  }
+  if (id !== "-1") {
+    return id;
+  }
+
+  if ('ipv4' in partialNode) {
+    id = getNodeIdForField(nodes, 'ipv4', partialNode['ipv4']);
+  }
+  if (id !== "-1") {
+    return id;
+  }
+
+  if ('ipv6' in partialNode) {
+    id = getNodeIdForField(nodes, 'ipv6', partialNode['ipv6']);
+  }
+
+  return id;
+};
+
+const prepareGraphData = (header) => {
   const data = { nodes: [], links: [] };
-  for (const line of lines) {
-    const by = line.match(/by [-.:\w]*/);
-    const from = line.match(/^from [-.:\w]*/);
 
-    if (by !== null && by.length > 0) {
-      const id = by[0].replace('by ', '').toLowerCase();
-      if (!data.nodes.reduce((acc, n) => acc || (n.id === id), false)) {
-        data.nodes.push({ id });
-      }
+  const records = parseRoutingRecords(header);
 
-      if (from != null && from.length > 0) {
-        const source = from[0].replace('from ', '').toLowerCase();
-        data.links.push({
-          source, target: id, strength: 0.5,
-        });
+  for (let record of records) {
+    if ('source' in record) {
+      addOrCompleteNode(data.nodes, record['source']);
+    }
 
-        if (!data.nodes.reduce((acc, n) => acc || (n.id === source), false)) {
-          data.nodes.push({ id: source });
-        }
-      }
+    if ('target' in record) {
+      addOrCompleteNode(data.nodes, record['target']);
+    }
+  }
+
+  for (let record of records) {
+    if ('source' in record && 'target' in record) {
+      data.links.push({
+        source: getNodeId(data.nodes, record['source']),
+        target: getNodeId(data.nodes, record['target']),
+        timestamp: record['timestamp'],
+      });
     }
   }
 
@@ -38,7 +139,7 @@ const getNeighbors = (node, links) => links.reduce((neighbors, link) => {
   }
   return neighbors;
 },
-[node.id]);
+  [node.id]);
 
 const isNeighborLink = (node, link) => link.target.id === node.id || link.source.id === node.id;
 
@@ -65,7 +166,9 @@ export default class extends Component {
       const width = 1050;
       const height = 500;
 
-      const data = getGraphData(this.props.results.Received);
+      const data = prepareGraphData(this.props.results['Received']);
+
+      console.log(data);
 
       const svg = d3.select('#canvas')
         .attr('width', width)
@@ -153,6 +256,7 @@ export default class extends Component {
     if (this.state.enabled) {
       return <Segment basic><svg id="canvas" /></Segment>;
     }
+
     return <Segment basic disabled><Header as="h4">Nothing to display.</Header></Segment>;
   }
 }

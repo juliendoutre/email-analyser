@@ -60,7 +60,7 @@ export const getEmailListFromField = (key, source) => {
   return [];
 };
 
-export const parseNode = (str) => {
+const parseRoutingNode = (str) => {
   const ipv4 = str.match(/[\s(,;[](?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)[\s),;\]]/);
   const ipv6 = str.match(/([0-9a-f]|:){1,4}(:([0-9a-f]{0,4})*){1,7}/i);
   const dns = str.match(/((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}/gi);
@@ -82,7 +82,7 @@ export const parseNode = (str) => {
   return node;
 };
 
-export const parseRoutingNodes = (lines) => {
+export const parseRoutingRecords = (lines) => {
   const nodes = [];
 
   for (let line of lines) {
@@ -92,19 +92,19 @@ export const parseRoutingNodes = (lines) => {
 
     const dateStartIndex = line.indexOf(';');
     if (dateStartIndex !== -1) {
-      node.timestamp = line.substring(dateStartIndex + 1, line.length);
+      node.timestamp = line.substring(dateStartIndex + 1, line.length).trim();
       line = line.substring(0, dateStartIndex);
     }
 
     const byStartIndex = line.indexOf('by ');
     if (byStartIndex !== -1) {
-      node.target = parseNode(line.substring(byStartIndex + 3, line.length));
+      node.target = parseRoutingNode(line.substring(byStartIndex + 3, line.length));
       line = line.substring(0, byStartIndex);
     }
 
     const fromStartIndex = line.indexOf('from ');
     if (fromStartIndex !== -1) {
-      node.source = parseNode(line.substring(fromStartIndex + 5, line.length));
+      node.source = parseRoutingNode(line.substring(fromStartIndex + 5, line.length));
     }
 
     nodes.push(node);
