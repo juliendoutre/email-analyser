@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/email-analyser/static/css/main.fd20eb7c.chunk.css",
-    "main.js": "/email-analyser/static/js/main.d1241e74.chunk.js",
-    "main.js.map": "/email-analyser/static/js/main.d1241e74.chunk.js.map",
+    "main.js": "/email-analyser/static/js/main.22ca9247.chunk.js",
+    "main.js.map": "/email-analyser/static/js/main.22ca9247.chunk.js.map",
     "runtime-main.js": "/email-analyser/static/js/runtime-main.8eeb973d.js",
     "runtime-main.js.map": "/email-analyser/static/js/runtime-main.8eeb973d.js.map",
     "static/css/2.3b611ab4.chunk.css": "/email-analyser/static/css/2.3b611ab4.chunk.css",
     "static/js/2.a0e27eb2.chunk.js": "/email-analyser/static/js/2.a0e27eb2.chunk.js",
     "static/js/2.a0e27eb2.chunk.js.map": "/email-analyser/static/js/2.a0e27eb2.chunk.js.map",
     "index.html": "/email-analyser/index.html",
-    "precache-manifest.a4463e94ea0d7b417102e101e24122f2.js": "/email-analyser/precache-manifest.a4463e94ea0d7b417102e101e24122f2.js",
+    "precache-manifest.1eb64f4368b0f0540ae3a1a0db549485.js": "/email-analyser/precache-manifest.1eb64f4368b0f0540ae3a1a0db549485.js",
     "service-worker.js": "/email-analyser/service-worker.js",
     "static/css/2.3b611ab4.chunk.css.map": "/email-analyser/static/css/2.3b611ab4.chunk.css.map",
     "static/css/main.fd20eb7c.chunk.css.map": "/email-analyser/static/css/main.fd20eb7c.chunk.css.map",
@@ -21,6 +21,6 @@
     "static/css/2.3b611ab4.chunk.css",
     "static/js/2.a0e27eb2.chunk.js",
     "static/css/main.fd20eb7c.chunk.css",
-    "static/js/main.d1241e74.chunk.js"
+    "static/js/main.22ca9247.chunk.js"
   ]
 }
