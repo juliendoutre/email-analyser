@@ -215,6 +215,7 @@ export default class extends Component {
         .selectAll("g")
         .data(data.nodes)
         .join("g")
+        .attr("isClicked", "false")
         .call(drag(simulation));
 
       node.append("circle")
@@ -226,11 +227,38 @@ export default class extends Component {
         .attr("dx", 20)
         .attr("dy", "0.31em")
         .style("fill", "black")
-        .text(d => d.id)
-        .clone(true).lower()
-        .attr("fill", "none")
-        .attr("stroke", "white")
-        .attr("stroke-width", 3);
+        .text(d => d.id);
+
+      function setActiveNode(el) {
+        el.style("fill", "orange");
+        el.select("text").style("fill", "orange").style("font-weight", "bold");
+      }
+
+      function setInactiveNode(el) {
+        el.style("fill", "#1f77b4");
+        el.select("text").style("fill", "black").style("font-weight", "normal");
+      }
+
+      node.on("mouseover", function () {
+        setActiveNode(d3.select(this));
+      });
+
+      node.on("mouseout", function () {
+        const el = d3.select(this);
+        if (el.attr("isClicked") === "false") {
+          setInactiveNode(el);
+        }
+      });
+
+      node.on("click", function () {
+        const el = d3.select(this);
+        node.selectAll("g").join("g").attr("isClicked", "false");
+        if (el.attr("isClicked") === "false") {
+          el.attr("isClicked", "true");
+        } else {
+          el.attr("isClicked", "false");
+        }
+      })
 
       const link = svg.append("g")
         .attr("fill", "none")
