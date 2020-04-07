@@ -259,6 +259,8 @@ export default class extends Component {
         const el = d3.select(this);
         if (el.attr("isClicked") === "false") {
           updateState(d);
+          d3.select("#nodes-container").selectAll("g").attr("isClicked", "false").style("fill", "#1f77b4").select("text").style("fill", "black").style("font-weight", "normal");
+          setActiveNode(el);
           el.attr("isClicked", "true");
         } else {
           el.attr("isClicked", "false");
