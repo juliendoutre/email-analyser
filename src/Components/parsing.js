@@ -67,8 +67,11 @@ const parseRoutingNode = (str) => {
 
   const node = {};
 
-  if (ipv4 !== null && ipv4.length > 0) {
-    node.ipv4 = ipv4[0].replace(/^[\s(,;[]/, '').replace(/[\s),;\]]$/, '');
+  if (ipv4 !== null && ipv4.length > 0 && ipv4) {
+    let ip = ipv4[0].replace(/^[\s(,;[]/, '').replace(/[\s),;\]]$/, '');
+    if (ip !== "127.0.0.1") {
+      node.ipv4 = ip;
+    }
   }
 
   if (ipv6 !== null && ipv6.length > 0) {
@@ -98,13 +101,22 @@ export const parseRoutingRecords = (lines) => {
 
     const byStartIndex = line.indexOf('by ');
     if (byStartIndex !== -1) {
-      node.target = parseRoutingNode(line.substring(byStartIndex + 3, line.length));
+      const target = parseRoutingNode(line.substring(byStartIndex + 3, line.length));
+
+      if (Object.keys(target).length !== 0) {
+        node.target = target;
+      }
+
       line = line.substring(0, byStartIndex);
     }
 
     const fromStartIndex = line.indexOf('from ');
     if (fromStartIndex !== -1) {
-      node.source = parseRoutingNode(line.substring(fromStartIndex + 5, line.length));
+      const source = parseRoutingNode(line.substring(fromStartIndex + 5, line.length));
+
+      if (Object.keys(source).length !== 0) {
+        node.source = source;
+      }
     }
 
     nodes.push(node);
