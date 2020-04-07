@@ -289,11 +289,11 @@ export default class extends Component {
       return <Segment basic>
         <Grid>
           <Grid.Column width={5}>
-            <Header as='h3'>
-              <Icon name='server' />
-              <Header.Content>Selected server</Header.Content>
-              {routingNodeItem(this.state.selectedNode)}
+            <Header as='h3' disabled={Object.keys(this.state.selectedNode).length === 0} textAlign='center'>
+              {Object.keys(this.state.selectedNode).length !== 0 ? <Icon name='server' /> : null}
+              <Header.Content>{Object.keys(this.state.selectedNode).length === 0 ? 'Click on a node to begin!' : 'Selected server'}</Header.Content>
             </Header>
+            {routingNodeItem(this.state.selectedNode)}
           </Grid.Column>
           <Grid.Column width={11}>
             <svg id="canvas" />
