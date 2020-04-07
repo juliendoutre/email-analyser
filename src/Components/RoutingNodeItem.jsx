@@ -7,7 +7,7 @@ class RoutingNodeItemAttribute extends Component {
 
     handleOpen = () => {
         this.setState({ popupVisible: true });
-        this.timeout = setTimeout(() => this.handleClose(), 1000);
+        this.timeout = setTimeout(() => this.handleClose(), 600);
     };
 
     handleClose = () => {
