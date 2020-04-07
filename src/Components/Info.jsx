@@ -21,7 +21,7 @@ export default () => (
     />
   )}
   >
-    <Header as="h1" icon="info circle" content="Info" />
+    <Header as='h1' icon="info circle" content="Info" />
     <Modal.Content>
       <Container text textAlign="justified">
         <Header size="medium">What is this website?</Header>
