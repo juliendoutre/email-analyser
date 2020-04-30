@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/email-analyser/static/css/main.fd20eb7c.chunk.css",
-    "main.js": "/email-analyser/static/js/main.22ca9247.chunk.js",
-    "main.js.map": "/email-analyser/static/js/main.22ca9247.chunk.js.map",
-    "runtime-main.js": "/email-analyser/static/js/runtime-main.8eeb973d.js",
-    "runtime-main.js.map": "/email-analyser/static/js/runtime-main.8eeb973d.js.map",
-    "static/css/2.3b611ab4.chunk.css": "/email-analyser/static/css/2.3b611ab4.chunk.css",
-    "static/js/2.a0e27eb2.chunk.js": "/email-analyser/static/js/2.a0e27eb2.chunk.js",
-    "static/js/2.a0e27eb2.chunk.js.map": "/email-analyser/static/js/2.a0e27eb2.chunk.js.map",
+    "main.css": "/email-analyser/static/css/main.f290987a.chunk.css",
+    "main.js": "/email-analyser/static/js/main.47ea80f5.chunk.js",
+    "main.js.map": "/email-analyser/static/js/main.47ea80f5.chunk.js.map",
+    "runtime-main.js": "/email-analyser/static/js/runtime-main.cac7880e.js",
+    "runtime-main.js.map": "/email-analyser/static/js/runtime-main.cac7880e.js.map",
+    "static/css/2.f3543a8d.chunk.css": "/email-analyser/static/css/2.f3543a8d.chunk.css",
+    "static/js/2.39d917a1.chunk.js": "/email-analyser/static/js/2.39d917a1.chunk.js",
+    "static/js/2.39d917a1.chunk.js.map": "/email-analyser/static/js/2.39d917a1.chunk.js.map",
     "index.html": "/email-analyser/index.html",
-    "precache-manifest.1eb64f4368b0f0540ae3a1a0db549485.js": "/email-analyser/precache-manifest.1eb64f4368b0f0540ae3a1a0db549485.js",
+    "precache-manifest.61392d4252b1f35ea0fe4267f4826878.js": "/email-analyser/precache-manifest.61392d4252b1f35ea0fe4267f4826878.js",
     "service-worker.js": "/email-analyser/service-worker.js",
-    "static/css/2.3b611ab4.chunk.css.map": "/email-analyser/static/css/2.3b611ab4.chunk.css.map",
-    "static/css/main.fd20eb7c.chunk.css.map": "/email-analyser/static/css/main.fd20eb7c.chunk.css.map",
-    "static/js/2.a0e27eb2.chunk.js.LICENSE.txt": "/email-analyser/static/js/2.a0e27eb2.chunk.js.LICENSE.txt",
+    "static/css/2.f3543a8d.chunk.css.map": "/email-analyser/static/css/2.f3543a8d.chunk.css.map",
+    "static/css/main.f290987a.chunk.css.map": "/email-analyser/static/css/main.f290987a.chunk.css.map",
+    "static/js/2.39d917a1.chunk.js.LICENSE.txt": "/email-analyser/static/js/2.39d917a1.chunk.js.LICENSE.txt",
     "static/media/semantic.min.css": "/email-analyser/static/media/outline-icons.ef60a4f6.woff"
   },
   "entrypoints": [
-    "static/js/runtime-main.8eeb973d.js",
-    "static/css/2.3b611ab4.chunk.css",
-    "static/js/2.a0e27eb2.chunk.js",
-    "static/css/main.fd20eb7c.chunk.css",
-    "static/js/main.22ca9247.chunk.js"
+    "static/js/runtime-main.cac7880e.js",
+    "static/css/2.f3543a8d.chunk.css",
+    "static/js/2.39d917a1.chunk.js",
+    "static/css/main.f290987a.chunk.css",
+    "static/js/main.47ea80f5.chunk.js"
   ]
 }
